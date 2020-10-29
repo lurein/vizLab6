@@ -8,7 +8,8 @@ export default function StackedAreaChart(container) {
 		.attr('width', width + margin.left + margin.right)
 		.attr('height', height + margin.top + margin.bottom)
 		.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
 
 	const tooltip = svg
 		.append("text")
@@ -55,12 +56,11 @@ export default function StackedAreaChart(container) {
 			.offset(d3.stackOffsetNone);
 		
 		var stackedData = stack(data)
-        console.log(stackedData)
         
         svg.selectAll(".areaSegment").remove()
 
 		// update scales, encodings, axes (use the total count)
-		colorScale.domain(keys)
+		colorScale.domain(data.columns.slice(1))
         xScale.domain(xDomain? xDomain:[data[0].date, data[data.length - 1].date]);
         yScale.domain([0, d3.max(data, function(d) { return d.total; })]);
 		// yScale.domain([0, d3.max(stackedData, 
@@ -109,6 +109,7 @@ export default function StackedAreaChart(container) {
     }
     
     function filterByDate(range){
+        console.log(range)
 		xDomain = range;
 		update(data);
     }

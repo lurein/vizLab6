@@ -23,6 +23,8 @@ export default function AreaChart(container){
 
     const gb = svg.append("g").attr('class', 'brush').call(brush);
 
+    const defaultSelection = [0,width];
+
     const listeners = { brushed: null };
 
     function brushed(event) {
