@@ -9,12 +9,20 @@ export default function StackedAreaChart(container) {
 		.attr('height', height + margin.top + margin.bottom)
 		.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
 
 	const tooltip = svg
 		.append("text")
 			.attr('x', 0)
             .attr('y', 0)
+
+    svg.append('defs')
+        .append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', width)
+            .attr('height', height);
             
     let selected = null, xDomain, data;
 
@@ -71,14 +79,14 @@ export default function StackedAreaChart(container) {
 			.x(function(d) { return xScale(d.data.date) })
 			.y0(function(d) { return yScale(d[0]) })
 			.y1(function(d) { return yScale(d[1]) })
-
-		
-		const areas = svg.selectAll(".area")
+        
+        const areas = svg.selectAll(".area")
 			.data(stackedData);
 		
 		areas.enter() // or you could use join()
 			.append("path")
-			.attr("class", "areaSegment")
+            .attr("class", "areaSegment")
+            .attr('clip-path', 'url(#clip)')
 			.style("fill", function(d) { return colorScale(d.key); })
 			.merge(areas)
 			.attr("d", area)
