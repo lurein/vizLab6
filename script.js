@@ -97,6 +97,11 @@ function StackedAreaChart(container) {
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	const tooltip = svg
+		.append("text")
+			.attr('x', 0)
+			.attr('y', 0)
+
 	const colorScale = d3
 		.scaleOrdinal()
 		.range(d3.schemeSet2)
@@ -158,6 +163,8 @@ function StackedAreaChart(container) {
 			.style("fill", function(d) { return colorScale(d.key); })
 			.merge(areas)
 			.attr("d", area)
+			.on("mouseover", (event, d, i) => tooltip.text(d.key))
+			.on("mouseout", (event, d, i) => tooltip.text(""))
 		
 		areas.exit().remove();
 		
