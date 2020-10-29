@@ -55,14 +55,17 @@ export default function StackedAreaChart(container) {
 			.offset(d3.stackOffsetNone);
 		
 		var stackedData = stack(data)
-		console.log(stackedData)
+        console.log(stackedData)
+        
+        svg.selectAll(".areaSegment").remove()
 
 		// update scales, encodings, axes (use the total count)
 		colorScale.domain(keys)
-		xScale.domain(xDomain? xDomain:[data[0].date, data[data.length - 1].date]);
-		yScale.domain([0, d3.max(stackedData, 
-			d => d3.max(d[1]) // compute the max of the nested array using y1 or d[1]
-		)]);
+        xScale.domain(xDomain? xDomain:[data[0].date, data[data.length - 1].date]);
+        yScale.domain([0, d3.max(data, function(d) { return d.total; })]);
+		// yScale.domain([0, d3.max(stackedData, 
+		// 	d => d3.max(d[1]) // compute the max of the nested array using y1 or d[1]
+		// )]);
 
 		const area = d3.area()
 			.x(function(d) { return xScale(d.data.date) })
@@ -75,7 +78,7 @@ export default function StackedAreaChart(container) {
 		
 		areas.enter() // or you could use join()
 			.append("path")
-			.attr("class", function(d) { return "myArea " + d.key })
+			.attr("class", "areaSegment")
 			.style("fill", function(d) { return colorScale(d.key); })
 			.merge(areas)
 			.attr("d", area)
